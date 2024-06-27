@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <string_view>
 #include <vector>
 
 std::string stringBetween(const std::string & src, char start, char end);
@@ -15,10 +14,10 @@ std::vector<long> parseLongs(const std::string & src, char skipChar);
 std::vector<long long> parseLLs(const std::string & src);
 std::vector<long long> parseLLs(const std::string & src, char skipChar);
 
-std::vector<std::string> split(const std::string & src, char delimiter);
+std::vector<std::string> split(const std::string &src, char delimiter);
 std::vector<std::string> parseWords(const std::string & src);
 std::vector<std::string> parseWordNums(const std::string & src);
 
-std::string ltrim(std::string_view src);
-std::string rtrim(std::string_view src);
-std::string trim(std::string_view src);
+std::string ltrim(const std::string &src);
+std::string rtrim(const std::string &src);
+std::string trim(const std::string &src);
