@@ -156,10 +156,50 @@ std::vector<long long> parseLLs(const std::string & src, char skipChar) {
   return parseNums(src, skipChar, std::stoll);
 }
 
+std::vector<std::string> split(const std::string &src, char delimiter) {
+  std::vector<std::string> result;
+  size_t prev, i;
+  for (prev = 0, i = 0; i < src.length(); ++i) {
+    if (src.at(i) == delimiter) {
+      result.push_back(src.substr(prev, i - prev));
+      prev = i + 1; // skip delimiter
+    }
+  }
+  --i;
+  if (i - prev > 0) {
+    result.push_back(src.substr(prev));
+  }
+  return result;
+}
+
 std::vector<std::string> parseWords(const std::string &src) {
   return parseChars<std::string>(src, exceptify(std::isalpha));
 }
 
 std::vector<std::string> parseWordNums(const std::string &src) {
   return parseChars<std::string>(src, exceptify(std::isalnum));
+}
+
+std::string ltrim(std::string_view src) {
+  for (size_t i = 0; i < src.length(); ++i) {
+    if (!std::isspace(src.at(i))) {
+      return std::string(src.substr(i));
+    }
+  }
+  return "";
+}
+
+std::string rtrim(std::string_view src) {
+  // note that this loop is 1-based to avoid overflow of reverse iteration
+  for (size_t i = 1, j = src.length() - i; i <= src.length(); j = src.length() - ++i) {
+    if (!std::isspace(src.at(j))) {
+      return std::string(src.substr(0, j + 1));
+    }
+  }
+  return "";  
+}
+
+std::string trim(std::string_view src) {
+  auto temp = ltrim(src);
+  return rtrim(temp);
 }
