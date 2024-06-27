@@ -105,12 +105,18 @@ std::string StableMatch::toString() const {
   for (const auto & items: {mProviders, mConsumers}) {
     for (auto const &item: items) {
       ss << std::format("{}: ", item.first);
+      bool leadingTerm = true;
       for (const auto &pref: item.second) {
-        ss << std::format("{:>2},", pref.second);
+        ss << (
+          leadingTerm ?
+          std::format(  "{}", pref.second) :
+          std::format(", {}", pref.second)
+        );
+        leadingTerm = false;
       }
-      ss << std::endl;
+      ss << '\n';
     }
-    ss << std::endl;
+    ss << '\n';
   }
   return ss.str();
 }

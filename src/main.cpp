@@ -3,9 +3,10 @@
 #include "StableMatch.hpp"
 
 void runTest();
-void tempTest();
+void testDefault();
 
 int main() {
+  testDefault();
   runTest();
   return 0;
 }
@@ -36,7 +37,7 @@ void testDefault() {
     ";"
     "X: B,A,C;"
     "Y: A,B,C;"
-    "Z: A,B,C"
+    "Z: A,B,C;"
   );
   std::cout << sm.toString();
   // sm.getMatches();
