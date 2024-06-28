@@ -3,31 +3,17 @@
 #include "StableMatch.hpp"
 
 void runTest();
+void runTest2();
+void runTest3();
 void testDefault();
 
 int main() {
   testDefault();
   runTest();
+  runTest2();
+  runTest3();
   return 0;
 }
-
-// void galeShapley(matchMap suppliers, matchMap consumers) {
-//   std::queue<std::pair<strv, prefMap::const_iterator>> queue;
-//   std::map<strv, strv> matches;
-
-//   for (auto const &supplier: suppliers) {
-//     queue.push({supplier.first, supplier.second.cbegin()});
-//   }
-
-//   for(auto here = queue.front(); !queue.empty(); here = queue.front()) {
-//     queue.pop();
-//     if (matches.find(here.second->second) != matches.cend()) {
-//       matches.insert({here.first, here.second->second});
-//     } else if (matche) {
-
-//     }
-//   }
-// }
 
 void testDefault() {
   alg::StableMatch sm(
@@ -40,7 +26,12 @@ void testDefault() {
     "Z: A,B,C;"
   );
   std::cout << sm.toString();
-  // sm.getMatches();
+
+  std::cout << "MATCHES: ";
+  for (auto const &m: sm.findMatches()) {
+    std::cout << m.first << "-" << m.second << ", ";
+  }
+  std::cout << "\n" << std::endl;
 }
 
 void runTest() {
@@ -57,4 +48,52 @@ void runTest() {
     true
   );
   std::cout << sm.toString();
+  
+  std::cout << "MATCHES: ";
+  for (auto const &m: sm.findMatches()) {
+    std::cout << m.first << "-" << m.second << ", ";
+  }
+  std::cout << "\n" << std::endl;
+}
+
+void runTest2() {
+  alg::StableMatch sm(
+    "Emory: Xavier, Yolanda, Zeus;"
+    "MGH: Yolanda, Xavier, Zeus;"
+    "NorthW: Xavier, Yolanda, Zeus;"
+    ";"
+    "Xavier: MGH, Emory, NorthW;"
+    "Yolanda: Emory, MGH, NorthW;"
+    "Zeus: Emory, MGH, NorthW;"
+  );
+  std::cout << sm.toString();
+  
+  std::cout << "MATCHES: ";
+  for (auto const &m: sm.findMatches()) {
+    std::cout << m.first << "-" << m.second << ", ";
+  }
+  std::cout << "\n" << std::endl;
+}
+
+void runTest3() {
+  alg::StableMatch sm(
+    "Emory: Wayne, Val, Yolanda, Zeus, Xavier;"
+    "MGH: Yolanda, Wayne, Val, Xavier, Zeus;"
+    "NorthW: Wayne, Zeus, Xavier, Yolanda, Val;"
+    "UMich: Val, Yolanda, Xavier, Wayne, Zeus;"
+    "UTSouth: Wayne, Yolanda, Val, Zeus, Xavier;"
+    ";"
+    "Val: UTSouth, Emory, MGH, UMich, NorthW;"
+    "Wayne: NorthW, MGH, UMich, Emory, UTSouth;"
+    "Xavier: MGH, NorthW, UMich, UTSouth, Emory;"
+    "Yolanda: Emory, UTSouth, UMich, NorthW, MGH;"
+    "Zeus: UMich, MGH, UTSouth, NorthW, Emory;"
+  );
+  std::cout << sm.toString();
+  
+  std::cout << "MATCHES: ";
+  for (auto const &m: sm.findMatches()) {
+    std::cout << m.first << "-" << m.second << ", ";
+  }
+  std::cout << "\n" << std::endl;
 }
