@@ -31,7 +31,7 @@ std::string stringBetween(const std::string &src, char start, char end) {
   }
 }
 
-std::string stringBefore(const std::string & src, char end) {
+std::string stringBefore(const std::string &src, char end) {
   size_t p1;
   p1 = src.find(end);
   if (p1 == src.npos || p1 <= 0) {
@@ -41,7 +41,7 @@ std::string stringBefore(const std::string & src, char end) {
   }
 }
 
-std::string stringAfter(const std::string & src, char start) {
+std::string stringAfter(const std::string &src, char start) {
   size_t p0;
   p0 = src.find(start);
   if (p0++ == src.npos || p0 >= src.length()) {
@@ -52,12 +52,13 @@ std::string stringAfter(const std::string & src, char start) {
 }
 
 template <class T>
-std::vector<T> parseChars(const std::string & src, funcInt2IntNoEx discriminator) {
+std::vector<T> parseChars(const std::string &src,
+                          funcInt2IntNoEx discriminator) {
   std::vector<T> result;
   std::stringstream buffer;
   bool enableBuffer = false;
-  
-  for (auto const & chr: src) {
+
+  for (auto const &chr : src) {
     if (discriminator(static_cast<unsigned char>(chr))) {
       buffer << chr;
       enableBuffer = true;
@@ -77,12 +78,12 @@ std::vector<T> parseChars(const std::string & src, funcInt2IntNoEx discriminator
 }
 
 template <class T>
-std::vector<T> parseNums(const std::string & src, funcStringParse<T> parser) {
+std::vector<T> parseNums(const std::string &src, funcStringParse<T> parser) {
   std::vector<T> result;
   std::stringstream buffer;
   bool enableBuffer = false;
 
-  for (auto const & chr: src) {
+  for (auto const &chr : src) {
     if (std::isdigit(chr)) {
       buffer << chr;
       enableBuffer = true;
@@ -105,12 +106,13 @@ std::vector<T> parseNums(const std::string & src, funcStringParse<T> parser) {
 }
 
 template <class T>
-std::vector<T> parseNums(const std::string & src, char skipChar, funcStringParse<T> parser) {
+std::vector<T> parseNums(const std::string &src, char skipChar,
+                         funcStringParse<T> parser) {
   std::vector<T> result;
   std::stringstream buffer;
   bool enableBuffer = false;
-  
-  for (auto const & chr: src) {
+
+  for (auto const &chr : src) {
     if (std::isdigit(chr)) {
       buffer << chr;
       enableBuffer = true;
@@ -132,27 +134,27 @@ std::vector<T> parseNums(const std::string & src, char skipChar, funcStringParse
   return result;
 }
 
-std::vector<int> parseInts(const std::string & src) {
+std::vector<int> parseInts(const std::string &src) {
   return parseNums(src, std::stoi);
 }
 
-std::vector<int> parseInts(const std::string & src, char skipChar) {
+std::vector<int> parseInts(const std::string &src, char skipChar) {
   return parseNums(src, skipChar, std::stoi);
 }
 
-std::vector<long> parseLongs(const std::string & src) {
+std::vector<long> parseLongs(const std::string &src) {
   return parseNums(src, std::stol);
 }
 
-std::vector<long> parseLongs(const std::string & src, char skipChar) {
+std::vector<long> parseLongs(const std::string &src, char skipChar) {
   return parseNums(src, skipChar, std::stol);
 }
 
-std::vector<long long> parseLLs(const std::string & src) {
+std::vector<long long> parseLLs(const std::string &src) {
   return parseNums(src, std::stoll);
 }
 
-std::vector<long long> parseLLs(const std::string & src, char skipChar) {
+std::vector<long long> parseLLs(const std::string &src, char skipChar) {
   return parseNums(src, skipChar, std::stoll);
 }
 
@@ -190,12 +192,13 @@ std::string ltrim(const std::string &src) {
 
 std::string rtrim(const std::string &src) {
   // note that this loop is 1-based to avoid overflow of reverse iteration
-  for (size_t i = 1, j = src.length() - i; i <= src.length(); j = src.length() - ++i) {
+  for (size_t i = 1, j = src.length() - i; i <= src.length();
+       j = src.length() - ++i) {
     if (!std::isspace(src.at(j))) {
       return std::string(src.substr(0, j + 1));
     }
   }
-  return "";  
+  return "";
 }
 
 std::string trim(const std::string &src) {

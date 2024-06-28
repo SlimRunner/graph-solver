@@ -9,11 +9,9 @@
 #include <vector>
 
 namespace alg {
-  
+
 static void insertItem(strv key, matchMap &items) {
-  if (
-    auto result = items.insert({key, prefMap{}}); !result.second
-  ) {
+  if (auto result = items.insert({key, prefMap{}}); !result.second) {
     std::ostringstream msg;
     msg << "This function disallows repeated insertions. ";
     msg << "The key inserted was " << key;
@@ -21,10 +19,8 @@ static void insertItem(strv key, matchMap &items) {
   }
 }
 
-static void insertPref(
-  strv key, matchMap &judges, const matchMap &candidates,
-  prefPairs pref
-) {
+static void insertPref(strv key, matchMap &judges, const matchMap &candidates,
+                       prefPairs pref) {
   if (judges.find(key) != judges.cend()) {
     if (candidates.find(pref.first) != candidates.cend()) {
       judges.at(key).insert(pref);
@@ -45,7 +41,8 @@ static void insertPref(
 
 StableMatch::StableMatch() : mProviders{}, mConsumers{} {}
 
-StableMatch::StableMatch(std::string str, bool explicitPriority) : mProviders{}, mConsumers{} {
+StableMatch::StableMatch(std::string str, bool explicitPriority)
+    : mProviders{}, mConsumers{} {
   bool swapTarget = false;
   constexpr auto EXPL_WORD = "explicit";
   constexpr auto EXPL_SIZE = sizeof EXPL_WORD;
@@ -55,9 +52,10 @@ StableMatch::StableMatch(std::string str, bool explicitPriority) : mProviders{},
     explicitPriority = true;
   }
 
-  for (const auto &lineRaw: split(std::string{str}, ';')) {
+  for (const auto &lineRaw : split(std::string{str}, ';')) {
     const auto &line = trim(lineRaw);
-    if (line.length() == 0) continue;
+    if (line.length() == 0)
+      continue;
     if (line.length() == 3 && line == "***") {
       swapTarget = true;
     } else if (!swapTarget) {
@@ -69,43 +67,41 @@ StableMatch::StableMatch(std::string str, bool explicitPriority) : mProviders{},
     }
   }
   swapTarget = false;
-  for (const auto &lineRaw: split(std::string{str}, ';')) {
+  for (const auto &lineRaw : split(std::string{str}, ';')) {
     const auto &line = trim(lineRaw);
     if (line.length() == 3 && line == "***") {
       swapTarget = true;
     } else if (!swapTarget) {
       const auto currKey = trim(stringBefore(line, ':'));
       int priority = 0; // lower means more priority
-      for (const auto &pref: split(stringAfter(line, ':'), ',')) {
+      for (const auto &pref : split(stringAfter(line, ':'), ',')) {
         if (!explicitPriority) {
           addProviderPreference(currKey, {trim(pref), priority++});
         } else {
           const auto kvPair = split(pref, '-');
-          addProviderPreference(currKey, {trim(kvPair.at(1)), std::stoi(trim(kvPair.at(0)))});
+          addProviderPreference(
+              currKey, {trim(kvPair.at(1)), std::stoi(trim(kvPair.at(0)))});
         }
       }
     } else {
       const auto currKey = trim(stringBefore(line, ':'));
       int priority = 0; // lower means more priority
-      for (const auto &pref: split(stringAfter(line, ':'), ',')) {
+      for (const auto &pref : split(stringAfter(line, ':'), ',')) {
         if (!explicitPriority) {
           addConsumerPreference(currKey, {trim(pref), priority++});
         } else {
           const auto kvPair = split(pref, '-');
-          addConsumerPreference(currKey, {trim(kvPair.at(1)), std::stoi(trim(kvPair.at(0)))});
+          addConsumerPreference(
+              currKey, {trim(kvPair.at(1)), std::stoi(trim(kvPair.at(0)))});
         }
       }
     }
   }
 }
 
-void StableMatch::insertProvider(strv key) {
-  insertItem(key, mProviders);
-}
+void StableMatch::insertProvider(strv key) { insertItem(key, mProviders); }
 
-void StableMatch::insertConsumer(strv key) {
-  insertItem(key, mConsumers);
-}
+void StableMatch::insertConsumer(strv key) { insertItem(key, mConsumers); }
 
 void StableMatch::addProviderPreference(strv key, prefPairs preferences) {
   insertPref(key, mProviders, mConsumers, preferences);
@@ -118,23 +114,20 @@ void StableMatch::addConsumerPreference(strv key, prefPairs preferences) {
 std::string StableMatch::toString() const {
   std::ostringstream ss;
 
-  for (const auto & items: {mProviders, mConsumers}) {
-    for (auto const &item: items) {
+  for (const auto &items : {mProviders, mConsumers}) {
+    for (auto const &item : items) {
       ss << std::format("{}: ", item.first);
 
       // this is done to sort by preference
       prefMapInv sortedPrefs;
-      for (auto const &p: item.second) {
+      for (auto const &p : item.second) {
         sortedPrefs.insert({p.second, p.first});
       }
 
       bool leadingTerm = true;
-      for (const auto &pref: sortedPrefs) {
-        ss << (
-          leadingTerm ?
-          std::format(  "{}", pref.second) :
-          std::format(", {}", pref.second)
-        );
+      for (const auto &pref : sortedPrefs) {
+        ss << (leadingTerm ? std::format("{}", pref.second)
+                           : std::format(", {}", pref.second));
         leadingTerm = false;
       }
       ss << '\n';
@@ -152,9 +145,9 @@ std::map<strv, strv> StableMatch::findMatches() const {
   std::vector<prefMapInv> sortedPrefs;
 
   // set up state of each provider
-  for (auto const &mProv: mProviders) {
+  for (auto const &mProv : mProviders) {
     sortedPrefs.push_back({});
-    for (auto const &p: mProv.second) {
+    for (auto const &p : mProv.second) {
       sortedPrefs.back().insert({p.second, p.first});
     }
 
@@ -173,10 +166,8 @@ std::map<strv, strv> StableMatch::findMatches() const {
     if (matches.find(candidateHash) == matches.end()) {
       matches.insert({candidateHash, providerHash});
       queue.pop();
-    } else if (
-      auto &currMatchHash = matches.at(candidateHash);
-      candidate.at(providerHash) < candidate.at(currMatchHash)
-    ) {
+    } else if (auto &currMatchHash = matches.at(candidateHash);
+               candidate.at(providerHash) < candidate.at(currMatchHash)) {
       ++state.at(currMatchHash);
       queue.push(state.find(currMatchHash));
       currMatchHash = providerHash;
