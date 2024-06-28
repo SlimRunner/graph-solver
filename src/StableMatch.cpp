@@ -30,8 +30,9 @@ static void insertPref(
       judges.at(key).insert(pref);
     } else {
       std::ostringstream msg;
-      msg << "You are trying to link a supplier to a consumer ";
-      msg << "that does not exist. The attempted key was: " << pref.first;
+      msg << "You are trying to link a supplier to a consumer that does ";
+      msg << "not exist. The attempted candidate is `" << pref.first;
+      msg << "` and the judge is " << key;
       throw std::logic_error(msg.str());
     }
   } else {
@@ -166,8 +167,8 @@ std::map<strv, strv> StableMatch::findMatches() const {
       candidate.at(providerHash) < candidate.at(currMatchHash)
     ) {
       ++state.at(currMatchHash);
-      currMatchHash = providerHash;
       queue.push(state.find(currMatchHash));
+      currMatchHash = providerHash;
       queue.pop();
     } else {
       ++state.at(providerHash);
