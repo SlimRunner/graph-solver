@@ -3,14 +3,16 @@
 #include <cstddef> // size_t
 #include <initializer_list>
 #include <map>
+#include <unordered_map>
 #include <string>
 
 namespace alg {
 
 using strv = std::string;
-using prefMap = std::multimap<size_t, strv, std::less<size_t>>;
+using prefMap = std::map<strv, size_t, std::less<strv>>;
+using prefMapInv = std::multimap<size_t, strv, std::less<size_t>>;
 using matchMap = std::map<strv, prefMap>;
-using prefPairs = std::pair<size_t, strv>;
+using prefPairs = std::pair<strv, size_t>;
 
 class StableMatch {
 private:

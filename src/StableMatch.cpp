@@ -1,9 +1,12 @@
 #include "StableMatch.hpp"
 
 #include "StringUtils.hpp"
+#include <deque>
 #include <exception>
 #include <format>
+#include <queue>
 #include <sstream>
+#include <vector>
 
 namespace alg {
   
@@ -20,15 +23,15 @@ static void insertItem(strv key, matchMap &items) {
 
 static void insertPref(
   strv key, matchMap &judges, const matchMap &candidates,
-  std::pair<size_t, strv> pref
+  prefPairs pref
 ) {
   if (judges.find(key) != judges.cend()) {
-    if (candidates.find(pref.second) != candidates.cend()) {
+    if (candidates.find(pref.first) != candidates.cend()) {
       judges.at(key).insert(pref);
     } else {
       std::ostringstream msg;
       msg << "You are trying to link a supplier to a consumer ";
-      msg << "that does not exist. The attempted key was: " << pref.second;
+      msg << "that does not exist. The attempted key was: " << pref.first;
       throw std::logic_error(msg.str());
     }
   } else {
@@ -63,10 +66,10 @@ StableMatch::StableMatch(std::string str, bool explicitPriority) : mProviders{},
       int priority = 0; // lower means more priority
       for (const auto &pref: split(stringAfter(line, ':'), ',')) {
         if (!explicitPriority) {
-          addProviderPreference(currKey, {priority++, trim(pref)});
+          addProviderPreference(currKey, {trim(pref), priority++});
         } else {
           const auto kvPair = split(pref, '-');
-          addProviderPreference(currKey, {std::stoi(trim(kvPair.at(0))), trim(kvPair.at(1))});
+          addProviderPreference(currKey, {trim(kvPair.at(1)), std::stoi(trim(kvPair.at(0)))});
         }
       }
     } else {
@@ -74,10 +77,10 @@ StableMatch::StableMatch(std::string str, bool explicitPriority) : mProviders{},
       int priority = 0; // lower means more priority
       for (const auto &pref: split(stringAfter(line, ':'), ',')) {
         if (!explicitPriority) {
-          addConsumerPreference(currKey, {priority++, trim(pref)});
+          addConsumerPreference(currKey, {trim(pref), priority++});
         } else {
           const auto kvPair = split(pref, '-');
-          addConsumerPreference(currKey, {std::stoi(trim(kvPair.at(0))), trim(kvPair.at(1))});
+          addConsumerPreference(currKey, {trim(kvPair.at(1)), std::stoi(trim(kvPair.at(0)))});
         }
       }
     }
@@ -102,11 +105,19 @@ void StableMatch::addConsumerPreference(strv key, prefPairs preferences) {
 
 std::string StableMatch::toString() const {
   std::ostringstream ss;
+
   for (const auto & items: {mProviders, mConsumers}) {
     for (auto const &item: items) {
       ss << std::format("{}: ", item.first);
+
+      // this is done to sort by preference
+      prefMapInv sortedPrefs;
+      for (auto const &p: item.second) {
+        sortedPrefs.insert({p.second, p.first});
+      }
+
       bool leadingTerm = true;
-      for (const auto &pref: item.second) {
+      for (const auto &pref: sortedPrefs) {
         ss << (
           leadingTerm ?
           std::format(  "{}", pref.second) :
