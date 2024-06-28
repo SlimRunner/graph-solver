@@ -132,4 +132,49 @@ std::string StableMatch::toString() const {
   return ss.str();
 }
 
+std::map<strv, strv> StableMatch::findMatches() const {
+  using iterMapInv = std::map<strv, prefMapInv::const_iterator>;
+  iterMapInv state;
+  std::queue<iterMapInv::iterator> queue;
+  std::map<strv, strv> matches;
+  std::vector<prefMapInv> sortedPrefs;
+
+  // set up state of each provider
+  for (auto const &mProv: mProviders) {
+    sortedPrefs.push_back({});
+    for (auto const &p: mProv.second) {
+      sortedPrefs.back().insert({p.second, p.first});
+    }
+
+    state.insert({mProv.first, sortedPrefs.back().begin()});
+  }
+
+  // fill queue with all providers
+  for (auto it = state.begin(); it != state.end(); ++it) {
+    queue.push(it);
+  }
+
+  for (; !queue.empty();) {
+    auto const providerHash = queue.front()->first;
+    auto const candidateHash = queue.front()->second->second;
+    auto const candidate = mConsumers.at(candidateHash);
+    if (matches.find(candidateHash) == matches.end()) {
+      matches.insert({candidateHash, providerHash});
+      queue.pop();
+    } else if (
+      auto &currMatchHash = matches.at(candidateHash);
+      candidate.at(providerHash) < candidate.at(currMatchHash)
+    ) {
+      ++state.at(currMatchHash);
+      currMatchHash = providerHash;
+      queue.push(state.find(currMatchHash));
+      queue.pop();
+    } else {
+      ++state.at(providerHash);
+    }
+  }
+
+  return matches;
+}
+
 } // namespace alg

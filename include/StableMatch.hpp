@@ -30,6 +30,7 @@ public:
   void addConsumerPreference(strv key, prefPairs preference);
 
   std::string toString() const;
+  std::map<strv, strv> findMatches() const;
 };
 
 } // namespace alg
