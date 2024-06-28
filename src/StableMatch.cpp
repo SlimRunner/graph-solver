@@ -47,8 +47,18 @@ StableMatch::StableMatch() : mProviders{}, mConsumers{} {}
 
 StableMatch::StableMatch(std::string str, bool explicitPriority) : mProviders{}, mConsumers{} {
   bool swapTarget = false;
-  for (const auto &line: split(std::string{str}, ';')) {
-    if (line.length() == 0) {
+  constexpr auto EXPL_WORD = "explicit";
+  constexpr auto EXPL_SIZE = sizeof EXPL_WORD;
+
+  if (auto pos = str.find(EXPL_WORD); pos != std::string::npos) {
+    str = str.replace(pos, EXPL_SIZE, "");
+    explicitPriority = true;
+  }
+
+  for (const auto &lineRaw: split(std::string{str}, ';')) {
+    const auto &line = trim(lineRaw);
+    if (line.length() == 0) continue;
+    if (line.length() == 3 && line == "***") {
       swapTarget = true;
     } else if (!swapTarget) {
       const auto currKey = trim(stringBefore(line, ':'));
@@ -59,8 +69,9 @@ StableMatch::StableMatch(std::string str, bool explicitPriority) : mProviders{},
     }
   }
   swapTarget = false;
-  for (const auto &line: split(std::string{str}, ';')) {
-    if (line.length() == 0) {
+  for (const auto &lineRaw: split(std::string{str}, ';')) {
+    const auto &line = trim(lineRaw);
+    if (line.length() == 3 && line == "***") {
       swapTarget = true;
     } else if (!swapTarget) {
       const auto currKey = trim(stringBefore(line, ':'));
