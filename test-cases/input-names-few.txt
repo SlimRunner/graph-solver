@@ -1,0 +1,7 @@
+Emory: Xavier, Yolanda, Zeus;
+MGH: Yolanda, Xavier, Zeus;
+NorthW: Xavier, Yolanda, Zeus;
+***;
+Xavier: MGH, Emory, NorthW;
+Yolanda: Emory, MGH, NorthW;
+Zeus: Emory, MGH, NorthW;

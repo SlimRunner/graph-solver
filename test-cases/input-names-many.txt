@@ -1,0 +1,11 @@
+Emory: Wayne, Val, Yolanda, Zeus, Xavier;
+MGH: Yolanda, Wayne, Val, Xavier, Zeus;
+NorthW: Wayne, Zeus, Xavier, Yolanda, Val;
+UMich: Val, Yolanda, Xavier, Wayne, Zeus;
+UTSouth: Wayne, Yolanda, Val, Zeus, Xavier;
+***;
+Val: UTSouth, Emory, MGH, UMich, NorthW;
+Wayne: NorthW, MGH, UMich, Emory, UTSouth;
+Xavier: MGH, NorthW, UMich, UTSouth, Emory;
+Yolanda: Emory, UTSouth, UMich, NorthW, MGH;
+Zeus: UMich, MGH, UTSouth, NorthW, Emory;

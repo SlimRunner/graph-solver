@@ -1,0 +1,7 @@
+A: X,Y,Z;
+B: Y,X,Z;
+C: X,Y,Z;
+***;
+X: B,A,C;
+Y: A,B,C;
+Z: A,B,C;
