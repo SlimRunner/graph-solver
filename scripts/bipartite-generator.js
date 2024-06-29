@@ -5,9 +5,9 @@ const fs = require('node:fs');
   const H = [];
   const S = [];
   
-  for (let i = 0; i < 30; ++i) {
-    H.push(`H${i.toString().padStart(2,"0")}`);
-    S.push(`s${i.toString().padStart(2,"0")}`);
+  for (let i = 0; i < 4; ++i) {
+    H.push(`H${i.toString().padStart(1,"0")}`);
+    S.push(`s${i.toString().padStart(1,"0")}`);
   }
   const Hsh = [...H];
   const Ssh = [...S];
@@ -24,7 +24,7 @@ const fs = require('node:fs');
     text += `${s}: ${Hsh.join(",")};\n`;
   }
 
-  fs.writeFile('./test-cases/input-001.txt', text, err => {
+  fs.writeFile('./test-cases/input-000.txt', text, err => {
     if (err) {
       console.error(err);
     } else {
