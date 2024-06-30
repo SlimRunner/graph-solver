@@ -162,12 +162,13 @@ std::map<strv, strv> StableMatch::findMatches() const {
   for (; !queue.empty();) {
     auto const providerHash = queue.front()->first;
     auto const candidateHash = queue.front()->second->second;
-    auto const candidate = mConsumers.at(candidateHash);
+    auto const candidatePref = mConsumers.at(candidateHash);
     if (matches.find(candidateHash) == matches.end()) {
       matches.insert({candidateHash, providerHash});
       queue.pop();
     } else if (auto &currMatchHash = matches.at(candidateHash);
-               candidate.at(providerHash) < candidate.at(currMatchHash)) {
+               candidatePref.at(providerHash) <
+               candidatePref.at(currMatchHash)) {
       ++state.at(currMatchHash);
       queue.push(state.find(currMatchHash));
       currMatchHash = providerHash;

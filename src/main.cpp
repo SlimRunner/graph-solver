@@ -30,18 +30,18 @@ void runTestCases() {
       fstr << infile.rdbuf();
       std::cout << std::format("{:=^80}\n", entry.path().filename().string());
 
-      alg::StableMatch sm(fstr.str());
-      std::cout << sm.toString();
+      alg::StableMatch smParser(fstr.str());
+      std::cout << smParser.toString();
 
       steady::time_point begin = steady::now();
-      const auto stableMatches = sm.findMatches();
+      const auto stableMatches = smParser.findMatches();
       steady::time_point end = steady::now();
 
       std::cout << "Stable matches: \n";
       bool leadingTerm = true;
-      for (auto const &m : stableMatches) {
+      for (auto const &sm : stableMatches) {
         std::cout << (leadingTerm ? "" : ", ");
-        std::cout << m.second << "-" << m.first;
+        std::cout << sm.second << "-" << sm.first;
         leadingTerm = false;
       }
       std::cout << "\n" << std::endl;
