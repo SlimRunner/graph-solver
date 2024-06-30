@@ -28,7 +28,7 @@ const fs = require('node:fs');
     if (err) {
       console.error(err);
     } else {
-      console.error("File was generated");
+      console.info("File was generated successfully");
     }
   });
 
