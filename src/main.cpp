@@ -27,8 +27,7 @@ int main() {
   return 0;
 }
 
-template <class T>
-void printTime(T time) {
+template <class T> void printTime(T time) {
   std::cout << time / 1000;
   std::cout << " ms + ";
   std::cout << time % 1000;
@@ -77,7 +76,8 @@ void runStressTest(size_t entryCount) {
     }
   }
   steady::time_point endAlloc = steady::now();
-  auto allocTimeDelta = std::chrono::duration_cast<chrono_us>(endAlloc - beginAlloc).count();
+  auto allocTimeDelta =
+      std::chrono::duration_cast<chrono_us>(endAlloc - beginAlloc).count();
   std::cout << "allocation in ";
   printTime(allocTimeDelta);
 
@@ -85,8 +85,9 @@ void runStressTest(size_t entryCount) {
   const auto stableMatches = smParser.findMatches();
   steady::time_point endAlgo = steady::now();
 
-  auto algoTimeDelta = std::chrono::duration_cast<chrono_us>(endAlgo - beginAlgo).count();
-  auto printMatches =[stableMatches]() {
+  auto algoTimeDelta =
+      std::chrono::duration_cast<chrono_us>(endAlgo - beginAlgo).count();
+  auto printMatches = [stableMatches]() {
     std::cout << "Stable matches (" << stableMatches.size() << ")" << ": \n";
     bool leadingTerm = true;
     for (auto const &sm : stableMatches) {
