@@ -5,7 +5,6 @@
 #include <cstddef> // size_t
 #include <deque>
 #include <filesystem>
-#include <format>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -17,7 +16,7 @@ void runStressTest(size_t entryCount);
 
 int main() {
   runTestCases();
-  runStressTest(1000);
+  runStressTest(2000);
 
   // profiling results 2024-06-30:
   // https://www.desmos.com/calculator/nrzic3beq3
@@ -46,7 +45,7 @@ void runStressTest(size_t entryCount) {
   const size_t numWidth =
       static_cast<size_t>(std::ceil(std::log10(entryCount)));
 
-  std::cout << std::format("{:=^80}\n", " Stress Test ");
+  std::cout << "== Stress Test =============================\n";
   std::cout << "Entry allocation started..." << std::endl;
   steady::time_point beginAlloc = steady::now();
   for (size_t i = 0; i < entryCount; ++i) {
@@ -129,7 +128,7 @@ void runTestCases() {
       std::stringstream fstr;
 
       fstr << infile.rdbuf();
-      std::cout << std::format("{:=^80}\n", entry.path().filename().string());
+      std::cout << "== " << entry.path().filename().string() << " =============================\n";
 
       alg::StableMatch smParser(fstr.str());
       std::cout << smParser.toString();

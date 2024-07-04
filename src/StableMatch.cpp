@@ -3,7 +3,6 @@
 #include "StringUtils.hpp"
 #include <deque>
 #include <exception>
-#include <format>
 #include <queue>
 #include <sstream>
 #include <vector>
@@ -116,7 +115,7 @@ std::string StableMatch::toString() const {
 
   for (const auto &items : {mProviders, mConsumers}) {
     for (auto const &item : items) {
-      ss << std::format("{}: ", item.first);
+      ss << item.first << ": ";
 
       // this is done to sort by preference
       prefMapInv sortedPrefs;
@@ -126,8 +125,7 @@ std::string StableMatch::toString() const {
 
       bool leadingTerm = true;
       for (const auto &pref : sortedPrefs) {
-        ss << (leadingTerm ? std::format("{}", pref.second)
-                           : std::format(", {}", pref.second));
+        ss << (leadingTerm ? "" : ", ") << pref.second;
         leadingTerm = false;
       }
       ss << '\n';
