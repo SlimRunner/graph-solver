@@ -110,7 +110,7 @@ void stableMatchCases() {
 
   for (const auto &entry : testFiles) {
     if (entry.path().extension() == ".txt" &&
-        entry.path().filename().string().find("input-") != std::string::npos) {
+        entry.path().filename().string().find("sm-input-") != std::string::npos) {
       std::ifstream infile(entry.path());
       std::stringstream fstr;
 
