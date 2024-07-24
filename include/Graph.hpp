@@ -35,7 +35,15 @@ public:
     return vit->second.connectWith(&(wit->second), weight);
   }
 
+  inline vtxHash::iterator begin() { return mVertices.begin(); }
+
+  inline vtxHash::iterator end() { return mVertices.end(); }
+
   inline vtxHash::const_iterator vertex(K key) const {
+    return mVertices.find(key);
+  }
+
+  inline vtxHash::iterator vertex(K key) {
     return mVertices.find(key);
   }
 };
