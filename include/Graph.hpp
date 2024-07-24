@@ -3,6 +3,8 @@
 #include "Node.hpp"
 #include <cstddef> // size_t
 #include <optional>
+#include <sstream>
+#include <string>
 #include <unordered_map>
 
 namespace alg {
@@ -43,8 +45,19 @@ public:
     return mVertices.find(key);
   }
 
-  inline vtxHash::iterator vertex(K key) {
-    return mVertices.find(key);
+  inline vtxHash::iterator vertex(K key) { return mVertices.find(key); }
+
+  std::string toString() {
+    std::ostringstream oss;
+    for (auto &&u : *this) {
+      oss << u.first << ": ";
+      for (auto &&v : u.second) {
+        oss << v.first->key() << ", ";
+      }
+      oss << std::endl;
+    }
+    oss << std::endl;
+    return oss.str();
   }
 };
 

@@ -1,4 +1,5 @@
 #include "UnitTests.hpp"
+#include "Algorithms.hpp"
 #include "StableMatch.hpp"
 #include <algorithm>
 #include <chrono>
@@ -110,7 +111,8 @@ void stableMatchCases() {
 
   for (const auto &entry : testFiles) {
     if (entry.path().extension() == ".txt" &&
-        entry.path().filename().string().find("sm-input-") != std::string::npos) {
+        entry.path().filename().string().find("sm-input-") !=
+            std::string::npos) {
       std::ifstream infile(entry.path());
       std::stringstream fstr;
 
@@ -141,6 +143,57 @@ void stableMatchCases() {
       printTime(timeDelta);
     }
   }
+}
+
+void topoSortSimpleTest() {
+  auto printOutput = [](std::optional<std::vector<int>> opt) {
+    if (opt.has_value()) {
+      std::cout << "sorted: ";
+      for (auto const &v : opt.value()) {
+        std::cout << v << ", ";
+      }
+      std::cout << "\n" << std::endl;
+    } else {
+      std::cout << "has cycle\n" << std::endl;
+    }
+  };
+
+  alg::Graph<int, int, int> G;
+  for (auto node : {10, 3, 9, 8, 7, 2, 11, 5}) {
+    G.addNode(node, 0);
+  }
+  std::array nfrom = {5, 11, 7, 8, 3, 10};
+  auto nit = nfrom.cbegin();
+  for (auto node : {11}) {
+    G.addEdge(*nit, node, 0);
+  }
+  ++nit;
+  for (auto node : {2, 9, 10}) {
+    G.addEdge(*nit, node, 0);
+  }
+  ++nit;
+  for (auto node : {11, 8}) {
+    G.addEdge(*nit, node, 0);
+  }
+  ++nit;
+  for (auto node : {9}) {
+    G.addEdge(*nit, node, 0);
+  }
+  ++nit;
+  for (auto node : {8, 10}) {
+    G.addEdge(*nit, node, 0);
+  }
+
+  std::cout << G.toString();
+  printOutput(alg::topoSort(G));
+
+  ++nit;
+  for (auto node : {11}) {
+    G.addEdge(*nit, node, 0);
+  }
+
+  std::cout << G.toString();
+  printOutput(alg::topoSort(G));
 }
 
 } // namespace tst
