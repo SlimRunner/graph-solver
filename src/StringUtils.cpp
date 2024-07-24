@@ -4,6 +4,8 @@
 #include <cstddef> // size_t
 #include <sstream>
 
+namespace sutl {
+
 using funcInt2Int = int (*)(int);
 using funcInt2IntNoEx = int (*)(int) noexcept(true);
 
@@ -205,3 +207,5 @@ std::string trim(const std::string &src) {
   auto temp = ltrim(src);
   return rtrim(temp);
 }
+
+} // namespace sutl

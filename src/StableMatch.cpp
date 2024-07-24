@@ -42,6 +42,7 @@ StableMatch::StableMatch() : mProviders{}, mConsumers{} {}
 
 StableMatch::StableMatch(std::string str, bool explicitPriority)
     : mProviders{}, mConsumers{} {
+  using namespace sutl;
   bool swapTarget = false;
   constexpr auto EXPL_WORD = "explicit";
   constexpr auto EXPL_SIZE = sizeof EXPL_WORD;

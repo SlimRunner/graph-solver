@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+namespace sutl {
+
 std::string stringBetween(const std::string &src, char start, char end);
 std::string stringBefore(const std::string &src, char end);
 std::string stringAfter(const std::string &src, char start);
@@ -21,3 +23,5 @@ std::vector<std::string> parseWordNums(const std::string &src);
 std::string ltrim(const std::string &src);
 std::string rtrim(const std::string &src);
 std::string trim(const std::string &src);
+
+} // namespace sutl
