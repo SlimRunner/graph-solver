@@ -164,7 +164,7 @@ std::vector<std::string> split(const std::string &src, char delimiter) {
   std::vector<std::string> result;
   size_t prev, i;
   for (prev = 0, i = 0; i < src.length(); ++i) {
-    if (src.at(i) == delimiter) {
+    if (src.at(i) == delimiter && i > prev) {
       result.push_back(std::string{src.substr(prev, i - prev)});
       prev = i + 1; // skip delimiter
     }
