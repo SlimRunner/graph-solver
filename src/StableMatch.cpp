@@ -52,7 +52,9 @@ StableMatch::StableMatch(std::string str, bool explicitPriority)
     explicitPriority = true;
   }
 
-  for (const auto &lineRaw : split(std::string{str}, ';')) {
+  auto const inputLines = split(str, ';');
+
+  for (const auto &lineRaw : inputLines) {
     const auto &line = trim(lineRaw);
     if (line.length() == 0)
       continue;
@@ -67,7 +69,7 @@ StableMatch::StableMatch(std::string str, bool explicitPriority)
     }
   }
   swapTarget = false;
-  for (const auto &lineRaw : split(std::string{str}, ';')) {
+  for (const auto &lineRaw : inputLines) {
     const auto &line = trim(lineRaw);
     if (line.length() == 3 && line == "***") {
       swapTarget = true;
