@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Node.hpp"
+#include "StringUtils.hpp"
 #include <cstddef> // size_t
 #include <optional>
 #include <sstream>
@@ -19,6 +20,26 @@ public:
   Graph() : mVertices{} {}
   template <class It> Graph(It begin, It end) : Graph{} {
     std::copy(begin, end, std::inserter(mVertices, mVertices.end()));
+  }
+
+  Graph(std::string str) : Graph{} {
+    using namespace sutl;
+
+    auto inputLines = split(str, '\n');
+    for (auto && line: inputLines) {
+      auto key = trim(stringBefore(line, ':'));
+      // value of node is defaulted to 0 for now
+      // better parsing is a WIP
+      addNode(key, T{});
+    }
+
+    for (const auto &line : inputLines) {
+      auto key = trim(stringBefore(line, ':'));
+      auto rels = trim(stringAfter(line, ':'));
+      for (const auto &node: parseWordNums(rels)) {
+        addEdge(key, node);
+      }
+    }
   }
 
   bool addNode(K key, T value) {

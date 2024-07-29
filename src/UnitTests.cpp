@@ -146,7 +146,7 @@ void stableMatchCases() {
 }
 
 void topoSortSimpleTest() {
-  auto printOutput = [](std::optional<std::vector<int>> opt) {
+  auto printOutput = [](std::optional<std::vector<std::string>> opt) {
     if (opt.has_value()) {
       std::cout << "sorted: ";
       for (auto const &v : opt.value()) {
@@ -158,42 +158,24 @@ void topoSortSimpleTest() {
     }
   };
 
-  alg::Graph<int, int, int> G;
-  for (auto node : {10, 3, 9, 8, 7, 2, 11, 5}) {
-    G.addNode(node, 0);
-  }
-  std::array nfrom = {5, 11, 7, 8, 3, 10};
-  auto nit = nfrom.cbegin();
-  for (auto node : {11}) {
-    G.addEdge(*nit, node, 0);
-  }
-  ++nit;
-  for (auto node : {2, 9, 10}) {
-    G.addEdge(*nit, node, 0);
-  }
-  ++nit;
-  for (auto node : {11, 8}) {
-    G.addEdge(*nit, node, 0);
-  }
-  ++nit;
-  for (auto node : {9}) {
-    G.addEdge(*nit, node, 0);
-  }
-  ++nit;
-  for (auto node : {8, 10}) {
-    G.addEdge(*nit, node, 0);
-  }
+  const auto testFiles = std::filesystem::directory_iterator("./test-cases/");
 
-  std::cout << G.toString();
-  printOutput(alg::topoSort(G));
+  for (const auto &entry : testFiles) {
+    if (entry.path().extension() == ".txt" &&
+        entry.path().filename().string().find("grph-input") !=
+            std::string::npos) {
+      std::ifstream infile(entry.path());
+      std::stringstream fstr;
 
-  ++nit;
-  for (auto node : {11}) {
-    G.addEdge(*nit, node, 0);
+      fstr << infile.rdbuf();
+      std::cout << "== " << entry.path().filename().string()
+                << " =============================\n";
+
+      alg::Graph<std::string, int, int> G(fstr.str());
+      std::cout << G.toString();
+      printOutput(alg::topoSort(G));
+    }
   }
-
-  std::cout << G.toString();
-  printOutput(alg::topoSort(G));
 }
 
 } // namespace tst
