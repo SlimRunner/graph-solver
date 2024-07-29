@@ -5,6 +5,7 @@
 #include <cstddef> // size_t
 #include <optional>
 #include <stack>
+#include <unordered_map>
 #include <vector>
 
 namespace alg {
@@ -25,15 +26,14 @@ std::optional<std::vector<K>> topoSort(Graph<K, T, W> graph) {
     // if neighbor is not visited add to stack
     if (graphState.find(node.first) == graphState.end()) {
       std::stack<K> stack;
-      std::vector<K> staging;
 
       stack.push(node.first);
+      graphState.emplace(node.first, QState::VISITED);
 
       while (!stack.empty()) {
         auto currKey = stack.top();
-        stack.pop();
 
-        graphState.emplace(currKey, QState::VISITED);
+        bool noNeighbors = true;
 
         for (auto const &neighbor : graph.vertex(currKey)->second) {
           if (auto state = graphState.find(neighbor.first->key());
@@ -43,18 +43,18 @@ std::optional<std::vector<K>> topoSort(Graph<K, T, W> graph) {
                      state->second == QState::VISITED) {
             return {};
           } else {
+            noNeighbors = false;
             stack.push(neighbor.first->key());
+            graphState.emplace(stack.top(), QState::VISITED);
+            break;
           }
         }
 
-        staging.push_back(currKey);
-      }
-
-      // copy staged keys in the right order
-      while (staging.size()) {
-        graphState.at(staging.back()) = QState::EXPLORED;
-        sortedNodes.push_back(staging.back());
-        staging.pop_back();
+        if (noNeighbors) {
+          graphState.at(stack.top()) = QState::EXPLORED;
+          sortedNodes.push_back(stack.top());
+          stack.pop();
+        }
       }
     }
   }
