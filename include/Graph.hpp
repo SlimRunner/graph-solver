@@ -26,7 +26,7 @@ public:
     using namespace sutl;
 
     auto inputLines = split(str, '\n');
-    for (auto && line: inputLines) {
+    for (auto &&line : inputLines) {
       auto key = trim(stringBefore(line, ':'));
       // value of node is defaulted to 0 for now
       // better parsing is a WIP
@@ -36,8 +36,8 @@ public:
     for (const auto &line : inputLines) {
       auto key = trim(stringBefore(line, ':'));
       auto rels = trim(stringAfter(line, ':'));
-      for (const auto &node: parseWordNums(rels)) {
-        addEdge(key, node);
+      for (const auto &node : split(rels, ',')) {
+        addEdge(key, trim(node));
       }
     }
   }
