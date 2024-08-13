@@ -28,6 +28,8 @@ public:
 
   inline adjHash::iterator end() { return mAdjList.end(); }
 
+  inline adjHash::iterator adjacentTo(Node * node) { return mAdjList.find(node); }
+
   inline const K &key() const { return mKey; }
 };
 

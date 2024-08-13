@@ -3,6 +3,7 @@
 #include "Node.hpp"
 #include "StringUtils.hpp"
 #include <cstddef> // size_t
+#include <deque>
 #include <optional>
 #include <sstream>
 #include <string>
@@ -47,7 +48,7 @@ public:
     return result.second;
   }
 
-  bool addEdge(K from, K to, W weight = 0) {
+  bool addEdge(K from, K to, W weight = W{}) {
     auto vit = mVertices.find(from);
     auto wit = mVertices.find(to);
 
@@ -68,6 +69,15 @@ public:
 
   inline vtxHash::iterator vertex(K key) { return mVertices.find(key); }
 
+  inline bool hasNode(K n) { return mVertices.find(n) != mVertices.end(); }
+
+  inline bool hasEdge(K n1, K n2) {
+    auto const vtx1 = mVertices.find(n1);
+    auto const vtx2 = mVertices.find(n2);
+    return (vtx1 != mVertices.end() && vtx2 != mVertices.end() &&
+            vtx1->second.adjacentTo(&(vtx2->second)) != vtx1->second.end());
+  }
+
   std::string toString() {
     std::ostringstream oss;
     for (auto &&u : *this) {
@@ -79,6 +89,39 @@ public:
     }
     oss << std::endl;
     return oss.str();
+  }
+
+  // THIS FUNCTION IS AN STALE WORK IN PROGRESS
+  template <class It> std::optional<std::string> toDiagram(It begin, It end) {
+    std::vector<K> keys(begin, end);
+    std::vector<std::string> keyText;
+
+    // for now this function can only print DAGs
+
+    for (auto const &k : keys) {
+      if (!hasNode(k)) {
+        return {};
+      }
+      std::ostringstream oss;
+      oss << k;
+      keyText.push_back(oss.str());
+    }
+
+    std::deque<std::ostringstream> diagram;
+    size_t rootIndex = 0;
+    diagram.push_back({});
+    
+    for (size_t lf = 0, rg = 1; rg < keys.size(); ++lf, ++rg) {
+      diagram.at(rootIndex) << keyText.at(lf);
+      if (hasEdge(keys.at(lf), keys.at(rg))) {
+        diagram.at(rootIndex) << "->-";
+      } else {
+        diagram.at(rootIndex) << "   ";
+      }
+    }
+    diagram.at(rootIndex) << keyText.back();
+
+    return diagram.at(rootIndex).str();
   }
 };
 

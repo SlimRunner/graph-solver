@@ -146,16 +146,12 @@ void stableMatchCases() {
 }
 
 void topoSortSimpleTest() {
-  auto printOutput = [](std::optional<std::vector<std::string>> opt) {
-    if (opt.has_value()) {
-      std::cout << "sorted: ";
-      for (auto const &v : opt.value()) {
-        std::cout << v << ", ";
-      }
-      std::cout << "\n" << std::endl;
-    } else {
-      std::cout << "has cycle\n" << std::endl;
+  auto printOutput = [](std::vector<std::string> values) {
+    std::cout << "sorted: ";
+    for (auto const &v : values) {
+      std::cout << v << ", ";
     }
+    std::cout << "\n" << std::endl;
   };
 
   const auto testFiles = std::filesystem::directory_iterator("./test-cases/");
@@ -173,7 +169,17 @@ void topoSortSimpleTest() {
 
       alg::Graph<std::string, int, int> G(fstr.str());
       std::cout << G.toString();
-      printOutput(alg::topoSort(G));
+      auto sorted = alg::topoSort(G);
+
+      if (sorted.has_value()) {
+        printOutput(sorted.value());
+        auto strG = G.toDiagram(sorted.value().begin(), sorted.value().end());
+        if (strG.has_value()) {
+          std::cout << strG.value() << std::endl;
+        }
+      } else {
+        std::cout << "has cycle\n" << std::endl;
+      }
     }
   }
 }
